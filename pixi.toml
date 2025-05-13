@@ -55,6 +55,7 @@ threedigrid = "==2.3.3"
 threedidepth = "==0.6.3"
 threedigrid_builder = "==1.14.4"
 threedi-api-client = "==4.1.8"
+hhnk-hhnk_research_tools
 
 
 [feature.dev.dependencies]

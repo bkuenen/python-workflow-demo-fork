@@ -118,6 +118,7 @@ def add_validation_errors(df):
     return df
 
 
+
 def value_validation(df):
     """
     Check if values in dataframe are valid
@@ -145,10 +146,46 @@ def value_validation(df):
     return df
 
 
+def dateformat_validation_and_repair(df):
+    """
+    Validate and repair the date format in the Tijdstip column of the DataFrame.
+
+    Args:
+        df (pd.DataFrame): Input DataFrame with Tijdstip column.
+
+    Returns:
+        pd.DataFrame: DataFrame with validation results and repaired values.
+    """
+
+    # Example validation: Check if the date format is correct
+    def validate_and_repair_date_format(tijdstip):
+        try:
+            # Validate the strict format
+            valid_date = pd.to_datetime(tijdstip, format="%Y-%m-%dT%H:%M:%S.%f%z")
+            return {"valid": True, "repaired": valid_date.isoformat()}
+        except ValueError:
+            # Attempt to repair with flexible parsing
+            try:
+                repaired_date = pd.to_datetime(tijdstip, errors="coerce")
+                if pd.notnull(repaired_date):
+                    return {"valid": False, "repaired": repaired_date.isoformat()}
+            except Exception:
+                pass
+            # Return as invalid with no repair if everything fails
+            return {"valid": False, "repaired": None}
+
+    # Apply the validation and repair function
+    validation_results = df["Tijdstip"].apply(validate_and_repair_date_format)
+
+    # Extract validation and repaired columns
+    df["date_validation"] = validation_results.apply(lambda x: x["valid"])
+    df["repaired_Tijdstip"] = validation_results.apply(lambda x: x["repaired"])
+
+    return df
+
+
 def main():
-    """
-    Main function to fetch, process, and display the temperature data.
-    """
+    """Fetch, process, and display the temperature data."""
     data = fetch_temperature_data()
     measurements = extract_measurements(data)
     df = process_measurements(measurements)
@@ -157,7 +194,7 @@ def main():
     # Assignment 1
     # Create validation of dataformat, add as function and push to branch
     # Write test to check your function
-    # df = dateformat_validation(df)
+    df = dateformat_validation_and_repair(df)
 
     # Assignment 2
     # Create validation of dataformat, add as function and push to branch
@@ -170,6 +207,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 # %%
