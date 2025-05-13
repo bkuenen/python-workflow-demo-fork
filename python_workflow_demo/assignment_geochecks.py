@@ -160,9 +160,7 @@ def dateformat_validation_and_repair(df):
 
 
 def main():
-    """
-    Main function to fetch, process, and display the temperature data.
-    """
+    """Fetch, process, and display the temperature data."""
     data = fetch_temperature_data()
     measurements = extract_measurements(data)
     df = process_measurements(measurements)
