@@ -125,20 +125,23 @@ def value_validation(df):
 
     for index, row in df.iterrows():
         valid_lst = []
+        df["valid_data"] = False
         validity = True
+        try:
+            if row["waardes"] is None:
+                validity = False
+                print("Invalid data: None")
+            elif isinstance(type(row["waardes"]), int):
+                validity = False
+                print(f"Invalid data type: {type(row['waardes'])}")
+            elif int(row["waardes"]) > 1000:
+                validity = False
+                print("Invalid data: Larger than 1000")
+        except:
+            validity = False
 
-        if row["waardes"] is None:
-            validity = False
-            print("Invalid data: None")
-        elif isinstance(type(row["waardes"]), int):
-            validity = False
-            print(f"Invalid data type: {type(row['waardes'])}")
-        elif int(row["waardes"]) > 1000:
-            validity = False
-            print("Invalid data: Larger than 1000")
+        df.at[index, "waardes"] = True
 
-        valid_lst.append(validity)
-    df["valid_data"] = valid_lst
     return df
 
 
