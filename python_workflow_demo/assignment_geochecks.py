@@ -118,7 +118,32 @@ def add_validation_errors(df):
     return df
 
 
-import pandas as pd
+
+def value_validation(df):
+    """
+    Check if values in dataframe are valid
+    """
+
+    for index, row in df.iterrows():
+        valid_lst = []
+        df["valid_data"] = False
+        validity = True
+        try:
+            if row["waardes"] is None:
+                validity = False
+                print("Invalid data: None")
+            elif isinstance(type(row["waardes"]), int):
+                validity = False
+                print(f"Invalid data type: {type(row['waardes'])}")
+            elif int(row["waardes"]) > 1000:
+                validity = False
+                print("Invalid data: Larger than 1000")
+        except:
+            validity = False
+
+        df.at[index, "waardes"] = True
+
+    return df
 
 
 def dateformat_validation_and_repair(df):
@@ -174,7 +199,7 @@ def main():
     # Assignment 2
     # Create validation of dataformat, add as function and push to branch
     # Write test to check your function
-    # df = value_validation(df)
+    df = value_validation(df)
 
     print(df.columns)
     print(df)
@@ -182,5 +207,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
 
 # %%
